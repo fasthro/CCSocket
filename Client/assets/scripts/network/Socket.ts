@@ -174,7 +174,7 @@ export default class Socket {
     }
 
     private ontimeout() {
-        if(this.m_ws == null || this.m_ws == undefined || this.m_ws.readyState != WebSocket.CLOSING)
+        if(this.m_ws == null || this.m_ws == undefined)
             return;
 
         if (this.m_ontimeout != null && this.m_ontimeout != undefined) {
