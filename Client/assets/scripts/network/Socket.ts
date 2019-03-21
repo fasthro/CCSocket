@@ -31,6 +31,11 @@ export default class Socket {
 
     /**
      * socket 状态
+     * [-1 初始状态]
+     * [ 0 连接中]
+     * [ 1 已连接]
+     * [ 2 关闭中]
+     * [ 3 已关闭]
      */
     public get state(){
         if(this.m_ws == null || this.m_ws == undefined)
@@ -64,7 +69,7 @@ export default class Socket {
      * @param port port
      * @param timeout 超时时间
      */
-    public connect(ip: string, port: string, timeout: number) {
+    public connect(ip: string, port: number, timeout: number) {
         if (this.m_ws == null) {
 
             this.m_ws = new WebSocket(`ws://${ip}:${port}`);
@@ -146,29 +151,32 @@ export default class Socket {
 
     private onopen(e: Event) {
         if (this.m_onopen != null && this.m_onopen != undefined) {
-            this.m_onopen.call(this.m_context);
+            this.m_onopen.call(this.m_context, e);
         }
     }
 
     private onclose(e: CloseEvent) {
         if (this.m_onclose != null && this.m_onclose != undefined) {
-            this.m_onclose.call(this.m_context);
+            this.m_onclose.call(this.m_context, e);
         }
     }
 
     private onmessage(e: MessageEvent) {
         if (this.m_onmessage != null && this.m_onmessage != undefined) {
-            this.m_onmessage.call(this.m_context);
+            this.m_onmessage.call(this.m_context, e);
         }
     }
 
     private onerror(e: Event) {
         if (this.m_onerror != null && this.m_onerror != undefined) {
-            this.m_onerror.call(this.m_context);
+            this.m_onerror.call(this.m_context, e);
         }
     }
 
     private ontimeout() {
+        if(this.m_ws == null || this.m_ws == undefined || this.m_ws.readyState != WebSocket.CLOSING)
+            return;
+
         if (this.m_ontimeout != null && this.m_ontimeout != undefined) {
             this.m_ontimeout.call(this.m_context);
         }
