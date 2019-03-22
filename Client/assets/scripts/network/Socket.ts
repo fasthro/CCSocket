@@ -70,7 +70,7 @@ export default class Socket {
      * @param timeout 超时时间
      */
     public connect(ip: string, port: number, timeout: number) {
-        if (this.m_ws == null) {
+        if (!this.m_ws) {
 
             this.m_ws = new WebSocket(`ws://${ip}:${port}`);
 
@@ -81,7 +81,7 @@ export default class Socket {
             this.m_ws.onerror = this.onerror.bind(this);
 
             // 清空超时Handle
-            if (this.m_timeoutHandle != null && this.m_timeoutHandle != undefined) {
+            if (this.m_timeoutHandle) {
                 clearTimeout(this.m_timeoutHandle);
             }
             // 启动超时
@@ -94,7 +94,7 @@ export default class Socket {
      * @param data 文本字符串数据
      */
     public send(data: string) {
-        if(this.m_ws != null && this.m_ws != undefined)
+        if(this.m_ws)
         {
             if(this.m_ws.readyState == WebSocket.OPEN)
             {
@@ -107,7 +107,7 @@ export default class Socket {
      * 关闭连接
      */
     public close() {
-        if(this.m_ws != null && this.m_ws != undefined)
+        if(this.m_ws)
         {
             if(this.m_ws.readyState == WebSocket.OPEN)
             {
@@ -121,12 +121,12 @@ export default class Socket {
      */
     public disponse() {
         // 清空超时 Handle
-        if (this.m_timeoutHandle != null && this.m_timeoutHandle != undefined) {
+        if (this.m_timeoutHandle) {
             clearTimeout(this.m_timeoutHandle);
         }
         
         // 清理 websocke
-        if(this.m_ws != null && this.m_ws != undefined)
+        if(this.m_ws)
         {
             if(this.m_ws.readyState == WebSocket.OPEN)
             {
@@ -150,34 +150,34 @@ export default class Socket {
     }
 
     private onopen(e: Event) {
-        if (this.m_onopen != null && this.m_onopen != undefined) {
+        if (this.m_onopen) {
             this.m_onopen.call(this.m_context, e);
         }
     }
 
     private onclose(e: CloseEvent) {
-        if (this.m_onclose != null && this.m_onclose != undefined) {
+        if (this.m_onclose) {
             this.m_onclose.call(this.m_context, e);
         }
     }
 
     private onmessage(e: MessageEvent) {
-        if (this.m_onmessage != null && this.m_onmessage != undefined) {
+        if (this.m_onmessage) {
             this.m_onmessage.call(this.m_context, e);
         }
     }
 
     private onerror(e: Event) {
-        if (this.m_onerror != null && this.m_onerror != undefined) {
+        if (this.m_onerror) {
             this.m_onerror.call(this.m_context, e);
         }
     }
 
     private ontimeout() {
-        if(this.m_ws == null || this.m_ws == undefined)
+        if(!this.m_ws)
             return;
 
-        if (this.m_ontimeout != null && this.m_ontimeout != undefined) {
+        if (this.m_ontimeout) {
             this.m_ontimeout.call(this.m_context);
         }
     }

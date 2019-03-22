@@ -17,10 +17,7 @@ export class Network {
     // 单例
     private static _inst: Network;
     public static get inst() {
-        if (Network._inst == null || Network._inst == undefined) {
-            Network._inst = new Network();
-        }
-        return Network._inst;
+        return Network._inst || (Network._inst = new Network());
     }
 
     // 连接超时时间
@@ -63,7 +60,7 @@ export class Network {
      * 连接状态
      */
     public get connectState() {
-        if (this.m_socket != null && this.m_socket != undefined) {
+        if (this.m_socket) {
             return this.m_socket.state;
         }
         return -1;
@@ -79,8 +76,8 @@ export class Network {
         this.m_port = port;
 
         if (this.connectState == -1 || this.connectState == WebSocket.CLOSED) {
-            if (this.m_socket == null || this.m_socket == undefined) {
-                if (connectCallback == null || connectCallback == undefined) {
+            if (!this.m_socket) {
+                if (connectCallback) {
                     connectCallback = this.onConnect;
                 }
                 this.m_socket = new Socket(this, connectCallback, this.onClose, this.onMessage, this.onError, this.onTimeout);
@@ -114,7 +111,7 @@ export class Network {
      */
     private autoReConnect() {
         // 清理重连Handle
-        if (this.m_reConnectHandle != null && this.m_reConnectHandle != undefined) {
+        if (this.m_reConnectHandle) {
             clearTimeout(this.m_reConnectHandle);
         }
         // 启动定时重连
@@ -146,12 +143,12 @@ export class Network {
      */
     private disponse() {
         // 清理重连Handle
-        if (this.m_reConnectHandle != null && this.m_reConnectHandle != undefined) {
+        if (this.m_reConnectHandle) {
             clearTimeout(this.m_reConnectHandle);
         }
 
         // 清理socket 对象
-        if (this.m_socket != null && this.m_socket != undefined) {
+        if (this.m_socket) {
             this.m_socket.disponse();
         }
         this.m_socket = null;
