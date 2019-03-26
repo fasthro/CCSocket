@@ -11,14 +11,5 @@ export default class Smaple extends cc.Component {
         // setInterval(() => {
         //     CNet.send(1, "ayue");
         // }, 3000);
-
-        // Event
-        CEvent.on("fire", () => {
-            console.log("fire event");
-        }, this);
-
-        CEvent.once("once fire", () => {
-            console.log("fire event");
-        }, this);
     }
 }
